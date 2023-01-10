@@ -1,9 +1,6 @@
 package com.microservices.core.product.persistence;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Version;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -13,6 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Document(collection = "products")
 public class ProductEntity {
 
@@ -29,4 +27,9 @@ public class ProductEntity {
 
     private int weight;
 
+    public ProductEntity(int productId, String name, int weight) {
+        this.productId = productId;
+        this.name = name;
+        this.weight = weight;
+    }
 }

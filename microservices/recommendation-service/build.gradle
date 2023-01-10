@@ -19,12 +19,16 @@ ext {
 dependencies {
 	implementation project(':api')
 	implementation project(':util')
-	implementation 'org.mapstruct:mapstruct:${mapstructVersion}'
-	compileOnly 'org.mapstruct:mapstruct:${mapstructVersion}'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:${mapstructVersion}'
-	testAnnotationProcessor 'org.mapstruct:mapstruct-processor:${mapstructVersion}'
+
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+	compileOnly "org.mapstruct:mapstruct:${mapstructVersion}"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+	testAnnotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
 	compileOnly 'org.projectlombok:lombok:1.18.24'
+	annotationProcessor 'org.projectlombok:lombok:1.18.24'
+	testCompileOnly 'org.projectlombok:lombok:1.18.24'
+	testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
 
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
