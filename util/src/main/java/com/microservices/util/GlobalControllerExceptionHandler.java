@@ -1,5 +1,6 @@
 package com.microservices.util;
 
+import com.microservices.api.exception.BadRequestException;
 import com.microservices.api.exception.InvalidInputException;
 import com.microservices.api.exception.NotFoundException;
 import org.slf4j.Logger;
@@ -30,6 +31,14 @@ public class GlobalControllerExceptionHandler {
             ServerHttpRequest request, InvalidInputException e) {
 
         return createHttpErrorInfo(HttpStatus.UNPROCESSABLE_ENTITY, request, e);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(BadRequestException.class)
+    public @ResponseBody HttpErrorInfo handleBadRequestException(
+            ServerHttpRequest request, BadRequestException e
+    ) {
+        return createHttpErrorInfo(HttpStatus.BAD_REQUEST, request, e);
     }
 
     private HttpErrorInfo createHttpErrorInfo(
