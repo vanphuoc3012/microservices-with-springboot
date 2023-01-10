@@ -15,6 +15,7 @@ spring:
       host: localhost
       port: 27017
       database: product-db
+      auto-index-creation: true
 
 ---
 spring:
