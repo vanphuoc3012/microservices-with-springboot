@@ -1,8 +1,16 @@
 server:
-  port: 7003
+  port: 7003  
   error:
     include-message: always
 logging:
   level:
     root: info
     com.microservices: debug
+
+---
+spring:
+  config:
+    activate:
+      on-profile: docker
+server:
+  port: 8080
