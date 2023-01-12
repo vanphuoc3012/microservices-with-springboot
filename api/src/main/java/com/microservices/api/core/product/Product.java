@@ -2,13 +2,13 @@ package com.microservices.api.core.product;
 
 public class Product {
 
-    private final int productId;
+    private int productId;
 
-    private final String name;
+    private String name;
 
-    private final int weight;
+    private int weight;
 
-    private final String serviceAddress;
+    private String serviceAddress;
 
     public Product(int productId, String name, int weight, String serviceAddress) {
         this.productId = productId;
@@ -38,5 +38,21 @@ public class Product {
 
     public String getServiceAddress() {
         return serviceAddress;
+    }
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public void setServiceAddress(String serviceAddress) {
+        this.serviceAddress = serviceAddress;
     }
 }
