@@ -3,13 +3,15 @@ package com.microservices.core.review.services;
 import com.microservices.api.core.review.Review;
 import com.microservices.api.core.review.ReviewService;
 import com.microservices.api.exception.InvalidInputException;
+import com.microservices.core.review.persistence.ReviewEntity;
+import com.microservices.core.review.persistence.ReviewRepository;
 import com.microservices.util.ServiceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -19,9 +21,15 @@ public class ReviewServiceImpl implements ReviewService {
 
     private final ServiceUtil serviceUtil;
 
+    private final ReviewRepository repository;
+
+    private final ReviewMapper mapper;
+
     @Autowired
-    public ReviewServiceImpl(ServiceUtil serviceUtil) {
+    public ReviewServiceImpl(ServiceUtil serviceUtil, ReviewRepository repository, ReviewMapper mapper) {
         this.serviceUtil = serviceUtil;
+        this.repository = repository;
+        this.mapper = mapper;
     }
 
     @Override
@@ -30,17 +38,31 @@ public class ReviewServiceImpl implements ReviewService {
             throw new InvalidInputException("Invalid productId: " + productId);
         }
 
-        if (productId == 213) {
-            LOG.debug("No reviews found for productId: {}", productId);
-            return new ArrayList<>();
+        List<ReviewEntity> reviewList = repository.findByProductId(productId);
+        List<Review> apiList = mapper.entityListToApiList(reviewList);
+        apiList.forEach(review -> review.setServiceAddress(serviceUtil.getServiceAddress()));
+
+        LOG.debug("getReview: reviews response size: {}", apiList.size());
+        return apiList;
+    }
+
+    @Override
+    public Review createReview(Review body) {
+        try {
+            ReviewEntity entity = mapper.apiToEntity(body);
+            ReviewEntity savedEntity = repository.save(entity);
+
+            LOG.debug("createReview: created a review entity (productId/reviewId): {}/{}", savedEntity.getProductId(), savedEntity.getReviewId());
+            return mapper.entityToApi(savedEntity);
+        } catch (DataIntegrityViolationException dive) {
+            throw new InvalidInputException("Duplicate key, productId: " + body.getProductId() + "Review Id: " + body.getReviewId());
         }
+    }
 
-        List<Review> list = new ArrayList<>();
-        list.add(new Review(productId, 1, "Author 1", "Subject 1", "Content 1", serviceUtil.getServiceAddress()));
-        list.add(new Review(productId, 2, "Author 2", "Subject 2", "Content 2", serviceUtil.getServiceAddress()));
-        list.add(new Review(productId, 3, "Author 3", "Subject 3", "Content 3", serviceUtil.getServiceAddress()));
-
-        LOG.debug("/reviews response size: {}", list.size());
-        return list;
+    @Override
+    public void deleteReview(int productId) {
+        LOG.debug("deleteReview: delete all reviews of product Id: {}", productId);
+        List<ReviewEntity> reviews = repository.findByProductId(productId);
+        repository.deleteAll(reviews);
     }
 }

@@ -10,11 +10,11 @@ public interface RecommendationService {
             value = "/recommendation",
             produces = "application/json")
     List<Recommendation> getRecommendations(
-            @RequestParam(value = "productId", required = true) int productId);
+            @RequestParam(value = "productId") int productId);
 
     @PostMapping(
             value = "/recommendation",
-            consumes = "applicaiton/json",
+            consumes = "application/json",
             produces = "application/json")
     Recommendation createRecommendation(@RequestBody Recommendation body);
 

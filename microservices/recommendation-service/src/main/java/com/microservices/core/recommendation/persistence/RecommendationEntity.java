@@ -32,4 +32,74 @@ public class RecommendationEntity {
     private int rating;
 
     private String content;
+
+//    public RecommendationEntity() {
+//
+//    }
+//
+//    public RecommendationEntity(String id, int version, int productId, int recommendationId, String author, int rating, String content) {
+//        this.id = id;
+//        this.version = version;
+//        this.productId = productId;
+//        this.recommendationId = recommendationId;
+//        this.author = author;
+//        this.rating = rating;
+//        this.content = content;
+//    }
+//
+//    public String getId() {
+//        return id;
+//    }
+//
+//    public void setId(String id) {
+//        this.id = id;
+//    }
+//
+//    public int getVersion() {
+//        return version;
+//    }
+//
+//    public void setVersion(int version) {
+//        this.version = version;
+//    }
+//
+//    public int getProductId() {
+//        return productId;
+//    }
+//
+//    public void setProductId(int productId) {
+//        this.productId = productId;
+//    }
+//
+//    public int getRecommendationId() {
+//        return recommendationId;
+//    }
+//
+//    public void setRecommendationId(int recommendationId) {
+//        this.recommendationId = recommendationId;
+//    }
+//
+//    public String getAuthor() {
+//        return author;
+//    }
+//
+//    public void setAuthor(String author) {
+//        this.author = author;
+//    }
+//
+//    public int getRating() {
+//        return rating;
+//    }
+//
+//    public void setRating(int rating) {
+//        this.rating = rating;
+//    }
+//
+//    public String getContent() {
+//        return content;
+//    }
+//
+//    public void setContent(String content) {
+//        this.content = content;
+//    }
 }
