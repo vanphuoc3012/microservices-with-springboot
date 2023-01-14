@@ -1,5 +1,7 @@
 package com.microservices.api.core.review;
 
+import com.microservices.api.composite.product.ReviewSummary;
+
 public class Review {
     private int productId;
     private int reviewId;
@@ -32,6 +34,15 @@ public class Review {
         this.author = author;
         this.subject = subject;
         this.content = content;
+    }
+
+    public static Review reviewSummaryToReview(int productId, ReviewSummary summary) {
+        return new Review(
+                productId,
+                summary.getReviewId(),
+                summary.getAuthor(),
+                summary.getSubject(),
+                summary.getContent());
     }
 
     public int getProductId() {

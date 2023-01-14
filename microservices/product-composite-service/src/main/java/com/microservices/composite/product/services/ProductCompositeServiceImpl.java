@@ -5,6 +5,8 @@ import com.microservices.api.core.product.Product;
 import com.microservices.api.core.recommendation.Recommendation;
 import com.microservices.api.core.review.Review;
 import com.microservices.util.ServiceUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +19,8 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
     private final ServiceUtil serviceUtil;
 
     private ProductCompositeIntegration integration;
+
+    private final Logger LOG = LoggerFactory.getLogger(ProductCompositeServiceImpl.class);
 
     @Autowired
     public ProductCompositeServiceImpl(ServiceUtil serviceUtil, ProductCompositeIntegration integration) {
@@ -35,12 +39,35 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
 
     @Override
     public void createProduct(ProductAggregate body) {
+        try {
+            Product product = Product.getProductFromAggregate(body);
+            integration.createProduct(product);
 
+            if(body.getRecommendations() != null) {
+                body.getRecommendations().forEach(recSummary -> {
+                    Recommendation recommendation =
+                            Recommendation.recommendationFromRecommendationSummary(body.getProductId(), recSummary);
+                    integration.createRecommendation(recommendation);
+                });
+            }
+
+            if(body.getReviews() != null) {
+                body.getReviews().forEach(reviewSummary -> {
+                    Review review = Review.reviewSummaryToReview(body.getProductId(), reviewSummary);
+                    integration.createReview(review);
+                });
+            }
+        } catch (RuntimeException ex) {
+            LOG.warn("createCompositeProduct fail", ex);
+            throw ex;
+        }
     }
 
     @Override
     public void deleteProduct(int productId) {
-
+        integration.deleteProduct(productId);
+        integration.deleteReview(productId);
+        integration.deleteRecommendation(productId);
     }
 
     private ProductAggregate createProductAggregate(Product product,
@@ -55,13 +82,13 @@ public class ProductCompositeServiceImpl implements ProductCompositeService {
         //2.recommendationSummary if any
         List<RecommendationSummary> recommendationSummaries =
                 (recommendations == null) ? null : recommendations.stream()
-                        .map(r -> new RecommendationSummary(r.getRecommendationId(), r.getAuthor(), r.getRate()))
+                        .map(r -> new RecommendationSummary(r.getRecommendationId(), r.getAuthor(), r.getRate(), r.getContent()))
                         .collect(Collectors.toList());
 
         //3.reviewSummary list if any
         List<ReviewSummary> reviewSummaries =
                 (reviews == null) ? null : reviews.stream()
-                        .map(r -> new ReviewSummary(r.getReviewId(), r.getAuthor(), r.getSubject()))
+                        .map(r -> new ReviewSummary(r.getReviewId(), r.getAuthor(), r.getSubject(), r.getContent()))
                         .collect(Collectors.toList());
 
         //4. Create ServiceAddresses, info regarding the involved microservices addresses

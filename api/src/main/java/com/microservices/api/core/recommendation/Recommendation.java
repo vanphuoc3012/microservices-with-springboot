@@ -1,5 +1,7 @@
 package com.microservices.api.core.recommendation;
 
+import com.microservices.api.composite.product.RecommendationSummary;
+
 public class Recommendation {
     private int productId;
     private int recommendationId;
@@ -24,6 +26,16 @@ public class Recommendation {
         this.rate = 0;
         this.content = null;
         this.serviceAddress = null;
+    }
+
+    public static Recommendation recommendationFromRecommendationSummary(int productId, RecommendationSummary summary) {
+        return new Recommendation(
+                productId,
+                summary.getRecommendationId(),
+                summary.getAuthor(),
+                summary.getRate(),
+                summary.getContent(),
+                null);
     }
 
     public int getProductId() {

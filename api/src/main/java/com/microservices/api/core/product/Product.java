@@ -1,5 +1,7 @@
 package com.microservices.api.core.product;
 
+import com.microservices.api.composite.product.ProductAggregate;
+
 public class Product {
 
     private int productId;
@@ -54,5 +56,14 @@ public class Product {
 
     public void setServiceAddress(String serviceAddress) {
         this.serviceAddress = serviceAddress;
+    }
+
+    public static Product getProductFromAggregate(ProductAggregate aggregate) {
+        Product product = new Product(
+                aggregate.getProductId(),
+                aggregate.getName(),
+                aggregate.getWeight(),
+                null);
+        return product;
     }
 }
