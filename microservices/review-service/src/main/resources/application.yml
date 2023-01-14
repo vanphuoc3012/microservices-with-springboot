@@ -8,6 +8,7 @@ logging:
     com.microservices: debug
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
 spring:
   jpa:
     hibernate:
@@ -24,5 +25,8 @@ spring:
   config:
     activate:
       on-profile: docker
+  datasource:
+    url: jdbc:mysql://mysql/review-db
 server:
   port: 8080
+

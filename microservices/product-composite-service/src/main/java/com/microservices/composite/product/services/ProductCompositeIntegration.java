@@ -46,9 +46,9 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
 
-        this.productServiceUrl = "http://"+productServiceHost + ":" + productServicePort + "/product/";
-        this.recommendationServiceUrl = "http://"+recommendationServiceHost + ":" + recommendationServicePort + "/recommendation?productId=";
-        this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort + "/review?productId=";
+        this.productServiceUrl = "http://"+productServiceHost + ":" + productServicePort + "/product";
+        this.recommendationServiceUrl = "http://"+recommendationServiceHost + ":" + recommendationServicePort + "/recommendation";
+        this.reviewServiceUrl = "http://" + reviewServiceHost + ":" + reviewServicePort + "/review";
     }
 
     @Override
@@ -69,7 +69,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public Product getProduct(int productId) {
         try {
-            String url = productServiceUrl + productId;
+            String url = productServiceUrl + "/" + productId;
             LOG.debug("Will call getProduct API on url: " + url);
 
             Product product = restTemplate.getForObject(url, Product.class);
@@ -85,7 +85,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public void deleteProduct(int productId) {
         try {
-            String url = productServiceUrl + productId;
+            String url = productServiceUrl + "/" + productId;
             LOG.debug("Will call deleteProduct API on url: " + url);
 
             restTemplate.delete(url);
@@ -113,7 +113,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public List<Recommendation> getRecommendations(int productId) {
         try {
-            String url = recommendationServiceUrl + productId;
+            String url = recommendationServiceUrl + "?productId=" + productId;
             LOG.debug("Will call getRecommendations API on url: {}", url);
 
             List<Recommendation> list = restTemplate.
@@ -158,7 +158,7 @@ public class ProductCompositeIntegration implements ProductService, Recommendati
     @Override
     public List<Review> getReviews(int productId) {
         try {
-            String url = reviewServiceUrl + productId;
+            String url = reviewServiceUrl + "?productId=" + productId;
             LOG.debug("Will call getReviews API on url: {}", url);
 
             List<Review> list = restTemplate.exchange(url, HttpMethod.GET, null,
